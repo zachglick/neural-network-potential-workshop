@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 
@@ -13,5 +12,3 @@ if __name__ == "__main__":
     X = df[["n_H", "n_C", "n_N", "n_O", "n_F"]].to_numpy()
     y = df[["E (Hartree)"]].to_numpy()
     model = LinearRegression(fit_intercept=True)
-    
-    print(X.shape, y.shape)
