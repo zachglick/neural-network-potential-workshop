@@ -3,43 +3,52 @@
 
 This repository contains three files:
 
-A compressed representation of (QM9)[https://figshare.com/collections/Quantum_chemistry_structures_and_properties_of_134_kilo_molecules/978904],
-a dataset of 133,885 stable organic molecules with up to nine heavy atoms (CONF). The file contains 133,885 lines (one per molecule) and seven columns.
+* `QM9.csv` A compressed representation of [QM9](https://figshare.com/collections/Quantum_chemistry_structures_and_properties_of_134_kilo_molecules/978904),
+a popular dataset of 133,885 stable organic molecules with up to nine heavy atoms (CONF). QM9 is often used to benchmark ML potentials.
+  - The file contains 133,885 lines (one per molecule) and seven columns
+  - The first column is the molecule id
+  - The next five columns are the element counts of the five elements present in QM9 (HCONF)
+  - The seventh and final column is the optimized ground state energy of the molecule calculated at the B3LYP/6-31G(2df,p) level of theory
 
-A python file titled analyze_energy_distribution.py for
+* `analyze_energy_distribution.py` A (mostly empty) python file for the first exercise.
 
-A python file titled run_linear_regression.py for
+* `run_linear_regression.py` A (mostly empty) python file for the second exercise.
 
+---
 
+### First Exercise : `analyze_energy_distribution.py`
 
-### Exercises : analyze_energy_distribution.py
+This exercise is intended to get you thinking about the target regression variable: the molecular ground state energy.
 
-These exercises are intended to get you thinking about the target regression variable: the molecular ground state energy.
-
-Plot a histogram of the QM9 energy distribution.
-and print out some values associated with this distribution: minimum, maximum, range, average, and standard deviation, etc.
+Plot a histogram of the QM9 energy distribution and print out some values associated with this distribution: minimum, maximum, range, average, and standard deviation, etc.
 What unit are the energies in?
 Are all energies the same sign?
 Why or why not?
 
-The average carbon-carbon bond dissocation energy is between 80 and 160 kcal / mol.
-Convert this energy range to the same units as the QM9 energies.
-For a PES regression model to accurately model bond-breaking, it must have an error much less than the average bond dissociation energy.
-Does that seem feasible? What is an 80 kcal / mol error as a fraction of the distribution standard deviation
+The average covalent bond is on the order of 100 kcal / mol.
+Convert this energy to the same units as the QM9 energies.
+For a ML model to accurately capture bond-breaking, it must have an error much less than the average bond dissociation energy.
+Does that seem feasible?
+What is an 100 kcal / mol error as a fraction of the standard deviation of energies?
 
-### Exercises : run_linear_regression.py
+---
 
-Use the scikit-learn library to fit and assess the performance of a simple linear regression model.
+### Second Exercise : `run_linear_regression.py`
 
-Print out the numpy arrays X and y. Print out their shapes. Ensure that you understand the meanings of the values and the dimensions.
+This exercise uses the scikit-learn library to assess the performance of a simple linear regression model.
 
-Read the scikit-learn documentation for (LinearRegression)[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html].
-Use the (already instantiated) LinearRegression object to fit the molecular atom counts to the energies.
-Next, evaluate the LinearRegression model on the same data to get \hat{y}.
-What's the mean absolute error (MAE) of these predictions? What about the root mean squared error?
+Print out and examine the numpy arrays $X$ and $y$. Ensure that you understand the meaning of the values. Print out the shapes of both arrays and make sure you understand the meaning of each dimension. How many parameters does linear regression require for this data?
 
-Make a scatter plot of y by yhat. This is a correlation plot.
-Make a scatter plot of y by yhat - y.
+Read the scikit-learn documentation for [LinearRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html).
+Use the (already instantiated) LinearRegression object to fit the molecular atom counts ($X$) to the energies ($y$).
+Next, evaluate the LinearRegression model on the same data to get $\hat{y}$.
+What's the mean absolute error (MAE) of these predictions? What about the root mean squared error (RMSE)?
+How do these numbers compare to the strength of a covalent bond? What about a strong intermolecular bond, such as a hydrogen bond?
 
+Print out the value of the linear regression parameters (both the weights and the bias).
+What are the units of these parameters? Intuitively, what do they mean? How do they relate to atomic number?
+Do you think your scatterplot would overestimate or underestimate the energy of isolated atoms?
 
-Repeat the fitting without the intercept. Do the results change? Is that expected?
+Make a scatter plot of $y$ by $\hat{y}$ and also of $y$ by $\hat{y} - y$.
+
+Repeat this exercise without an intercept. Do the results change? Is that expected?
