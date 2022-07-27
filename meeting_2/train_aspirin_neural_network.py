@@ -68,14 +68,14 @@ def test_loop(dataloader, model, loss_fn):
 if __name__ == "__main__":
 
     # training hyperparameters: edit these!
-    learning_rate = 1e-3
+    learning_rate = 1e-5
     batch_size = 100
-    epochs = 50
-    N_train = 8000 # keep this in range [1, 8000]
+    epochs = 100
+    N_train = 100 # keep this in range [1, 98000]
 
     ###########################################################################
 
-    # we'll always test on the last 2000 aspirin molecules
+    # we'll always test on the last 2000 aspirin molecules; don't change this
     N_test = 2000
 
     # load the (molecule, energy) data using a custom pytorch class

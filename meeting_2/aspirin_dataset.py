@@ -66,26 +66,33 @@ class AspirinDataset(torch.utils.data.Dataset):
         """
 
         # code your own features here
-        pass
+        return 
 
     def __init__(self, npz_file: str, size: int):
         """
         Args:
             npz_file (string): Path to the npz_file.
-            size (int): Number of molecules to load (up to 10,000)
+            size (int): Number of molecules to load (up to 100,000)
         """
 
-        assert 0 < size <= 10000
+        assert 2000 < size <= 100000
 
         # load the raw data from saved numpy file
         data = np.load(npz_file)
 
         # R (raw molecular coordinate, Ang) : (n_mol, n_atom, 3)
         # E (energies, kcal / mol)          : (n_mol, 1)
-        R = data['coords'][-size:]
-        E = data['energies'][-size:].reshape(-1,1)
 
-        X = AspirinDataset.make_features_distance_matrix(R)
+        inds = np.arange(98000)
+        np.random.shuffle(inds)
+        inds = np.concatenate((inds[:size-2000], np.arange(98000, 100000)))
+
+        R = data['coords'][inds]
+        E = data['energies'][inds].reshape(-1,1)
+
+        X = AspirinDataset.make_features_raw_coords(R)
+        #X = AspirinDataset.make_features_distance_matrix(R)
+        #X = AspirinDataset.make_features_custom(R)
         y = E
 
         # normalize the features (X) and labels (y)
