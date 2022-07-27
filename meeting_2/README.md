@@ -23,8 +23,8 @@ This file is also where you implement a molecular feature vector (i.e. a constan
 This exercise is intended to get you familiar with the process of training a neural network
 
 Run the file `train_aspirin_neural_network.py` from the command line.
-Observe the training and testing errors each epoch.
-Make a note of the best test error over 100 epochs.
+Observe the training and validation errors each epoch.
+Make a note of the best validation error over 100 epochs.
 Does the model seem to be learning anything?
 Do you think this model is converged?
 
@@ -60,9 +60,9 @@ Make sure that the final output is dimension 1, and also that the output of each
 
 Re-run `train_aspirin_neural_network.py`.
 Observe how the amount of time per epoch changed.
-Did your new architecture result in a better test error?
-If not, continue to modify the architecture until you can achieve a better test error.
-If you do get a better test error, see if you can improve it further.
+Did your new architecture result in a better validation error?
+If not, continue to modify the architecture until you can achieve a better validation error.
+If you do get a better validation error, see if you can improve it further.
 You make have to re-tune the learning rate.
 
 ---
@@ -91,14 +91,14 @@ Comment out the raw coordinate line and uncomment the subsequent line:
 This function assigns interatomic distances (instead of raw coordinates) to the constant-length per-molecule feature vector (`X`).
 Are distances translationally and rotationally invariant?
 
-Re-run `train_aspirin_neural_network.py` and see if you get better results (i.e. a lower test RMSE).
+Re-run `train_aspirin_neural_network.py` and see if you get better results (i.e. a lower validation RMSE).
 You make have to re-tune the learning rate.
 
 ---
 
 ### Fifth Exercise : Optimize the training process
 
-After completing the first four excercises, see how low you can get the test RMSE.
+After completing the first four excercises, see how low you can get the validation RMSE.
 
 You may want to try implementing your own custom feature vector. You can do this by implementing the `make_features_distance_custom` function in `aspirin_dataset.py`.
 Consider using angles in addition to distances.
