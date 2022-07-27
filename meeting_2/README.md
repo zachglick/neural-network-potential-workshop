@@ -53,8 +53,9 @@ Read about constructing neural networks with pytorch [here](https://pytorch.org/
 Also look [here](https://pytorch.org/docs/stable/nn.functional.html) for a full list of possible layers and activation functions.
 
 Sketch the current architecture on a piece of paper (or white board).
-Can you count how many parameters this model has?
-Edit the architecture, adding one or more hidden layers (and activation functions) and increases the dimensionality of one or more hidden layers.
+Can you count the number of parameters in this model?
+This architecture is intentionally not optimized.
+Edit the architecture, adding one or more hidden layers (and activation functions) and also increase the dimensionality of one or more hidden layers.
 Make sure that the final output is dimension 1, and also that the output of each hidden layer matches the input of the next hidden layer.
 
 Re-run `train_aspirin_neural_network.py`.
@@ -75,7 +76,7 @@ Find the following line:
 ```
         X = AspirinDataset.make_features_raw_coords(R)
 ```
-This function computes a constant length feature vector from the raw atomic coordinates.
+This function computes a constant-length per-molecule feature vector (`X`) from the raw atomic coordinates (`R`).
 In this case, the raw coordinates are used as the feature vector without modification, so the function doesn't do much.
 
 Raw coordinates may not be the best choice for a feature vector.
@@ -87,7 +88,7 @@ Comment out the raw coordinate line and uncomment the subsequent line:
 ```
         #X = AspirinDataset.make_features_distance_matrix(R)
 ```
-This function computes interatomic distances (instead of raw coordinates) for the constant length feature vector.
+This function assigns interatomic distances (instead of raw coordinates) to the constant-length per-molecule feature vector (`X`).
 Are distances translationally and rotationally invariant?
 
 Re-run `train_aspirin_neural_network.py` and see if you get better results (i.e. a lower test RMSE).
@@ -100,8 +101,8 @@ You make have to re-tune the learning rate.
 After completing the first four excercises, see how low you can get the test RMSE.
 
 You may want to try implementing your own custom feature vector. You can do this by implementing the `make_features_distance_custom` function in `aspirin_dataset.py`.
-Consider using not just distances as features, but also angles.
+Consider using angles in addition to distances.
 
-Besides tweaking the learning rate and architecture, other things you can tune are the batch size, the amount of training data used, and number of epochs trained. 
+Besides tweaking the learning rate and architecture, other tunable (hyper)parameters are the batch size, the amount of training data used, and number of epochs trained. 
 The optimal learning rate is particularly sensitive to batch size.
-All of these are specified together in `train_aspirin_neural_network.py`.
+These values are specified at the top of the `__main__` function in `train_aspirin_neural_network.py`.
