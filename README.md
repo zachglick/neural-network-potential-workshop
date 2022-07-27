@@ -11,4 +11,17 @@ This workshop is a 5-week crash course on machine learning methods for modeling 
 
 
 [Planning Document](https://docs.google.com/document/d/1g_jCtJIjDGk9Xt4DlSNOmnnLspdjKYA4RkNq4t2H4H0)  
-[Syllabus](https://docs.google.com/document/d/1zAmBYdfsSSUiAL2vYRpEVnwrf4jPIdLhT05XoTv5La4)
+[Syllabus](https://docs.google.com/document/d/1zAmBYdfsSSUiAL2vYRpEVnwrf4jPIdLhT05XoTv5La4)  
+[Meeting 1 Slides](https://docs.google.com/presentation/d/1gIefW0h07NFAQIoZ40YRfCEcNRzDHdWUTBWtLZ969ZY)
+
+---
+
+### Getting Started
+
+Each directory contains a separate presentation and related Python exercise. To participate in the exercises, we recommend working in a conda environment on a personal computer. A non-exhaustive list of Python packages needed for the exercises:
+
+- numpy
+- pandas
+- scikit-learn
+- pytorch
+
