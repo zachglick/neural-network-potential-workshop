@@ -9,8 +9,8 @@ a popular dataset of 100,000 molecular dynamics geometries (with DFT energies an
   - The file can be read with `numpy.loadz`
   - Geometries are stored in Angstrom; energies in kcal / mol
 
-* `aspirin_dataset.py` Contains the `AspirinDataset` class for easily loading and managing the geometries and energies.
-This file is also where you implement a molecular feature vector (i.e. a constant length vector to describe an arbitrary aspirin molecule).
+* `aspirin_dataset.py` Contains the `AspirinDataset` class for easily loading and managing the geometries and energies in `rmd17_aspirin_edited.npz`.
+This file is also where you implement a molecular feature vector (i.e. a constant length vector to describe an arbitrary geometry of the aspirin molecule).
 
 * `pes_neural_network.py` Contains the `PESNeuralNetwork` class, which is a neural network object for modeling the potential energy surface of a single molecule (such as aspirin). This file is where you implement a neural network architecture (i.e. choose a sequence of various size layers and activation functions).
 
@@ -24,7 +24,7 @@ This exercise is intended to get you familiar with the process of training a neu
 
 Run the file `train_aspirin_neural_network.py` from the command line.
 Observe the training and testing errors each epoch.
-Make a note of the best test error over 50 epochs.
+Make a note of the best test error over 100 epochs.
 Does the model seem to be learning anything?
 Do you think this model is converged?
 
@@ -40,7 +40,7 @@ Do you think your new learning rate is better or worse?
 Repeat this exercise with learning rates between $10^{-1}$ and $10^{-7}$, making sure to try the extreme values.
 Can you explain the behavior at the extreme values?
 What's the best learning rate you can find?
-Leave the `learning_rate` variable set to your hand-tuned value.
+Leave the `learning_rate` variable set to your best hand-tuned value.
 
 ---
 
@@ -84,8 +84,8 @@ Should they have the same energy?
 Will they have the same energy according to a neural network using this feature vector?
 
 Comment out the raw coordinate line and uncomment the subsequent line:
-        #X = AspirinDataset.make_features_distance_matrix(R)
 ```
+        #X = AspirinDataset.make_features_distance_matrix(R)
 ```
 This function computes interatomic distances (instead of raw coordinates) for the constant length feature vector.
 Are distances translationally and rotationally invariant?
@@ -102,5 +102,6 @@ After completing the first four excercises, see how low you can get the test RMS
 You may want to try implementing your own custom feature vector. You can do this by implementing the `make_features_distance_custom` function in `aspirin_dataset.py`.
 Consider using not just distances as features, but also angles.
 
-Besides tweaking the learning rate and architecture, another thing to try is changing the batch size, amount of training data used, and number of epochs trained. 
+Besides tweaking the learning rate and architecture, other things you can tune are the batch size, the amount of training data used, and number of epochs trained. 
 The optimal learning rate is particularly sensitive to batch size.
+All of these are specified together in `train_aspirin_neural_network.py`.
