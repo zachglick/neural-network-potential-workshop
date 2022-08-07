@@ -45,4 +45,21 @@ Note how the time required to compute the symmetry functions is reduced.
 
 ### Second Exercise: Train a BPNN model on QM9
 
-Run `train_qm9_neural_network.py`
+Run `train_qm9_neural_network.py` to train a BPNN on QM9.
+How low of a RMSE do you get using 1,000 training molecules for 300 epochs?
+Repeat the exercise with greater numbers of training molecules to generate a learning curve.
+With additional training molecules, you should train for fewer epochs, so that the total number of back-propagations is approximately consistent.
+Use these values:
+
+| Molecules | Epochs |
+| --------- | ------ |
+| 1,000     | 300    |
+| 2,000     | 200    |
+| 5,000     | 150    |
+| 10,000    | 100    |
+| 20,000    | 50     |
+| 50,000    | 30     |
+| 100,000   | 15     |
+| 131,885   | 15     |
+
+Plot the validation RMSE against the number of molecules.
