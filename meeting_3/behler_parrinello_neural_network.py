@@ -8,13 +8,14 @@ class BehlerParrinelloNeuralNetwork(torch.nn.Module):
     """ pytorch dense feed-forward neural network for transferable modeling of PESs"""
 
     def atom_network(self, input_size):
-        """ Create a single dense feed-forward neural network.
+        """ Create a dense feed-forward neural network for modeling atomic energies
+            for a single atom type
 
             Args: 
-                input_size (int) :
+                input_size (int) : the length of the atomic feature vector
 
             Returns:
-                atom_network (torch.nn.Sequential) :
+                atom_network (torch.nn.Sequential) : the atomic energy network
 
         """
 
@@ -40,7 +41,7 @@ class BehlerParrinelloNeuralNetwork(torch.nn.Module):
         self.atom_networks = torch.nn.ModuleList([self.atom_network(input_size) for atom in atoms])
 
     def forward(self, x, ind, e):
-        """definition of a forward pass for this network"""
+        """ Definition of a forward pass for this network """
 
         for atom_i, atom in enumerate(self.atoms):
             
@@ -50,8 +51,3 @@ class BehlerParrinelloNeuralNetwork(torch.nn.Module):
             e.index_add_(0, ind[atom], atom_energies)
 
         return e
-
-
-if __name__ == "__main__":
-
-    model = BehlerParrinelloNeuralNetwork(100, [1, 6, 7, 8, 9])

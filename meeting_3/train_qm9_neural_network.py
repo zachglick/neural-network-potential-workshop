@@ -72,7 +72,7 @@ if __name__ == "__main__":
     learning_rate = 5e-4
     batch_size = 100
     epochs = 100
-    N_train = 100000 # keep this in range [1, 98000]
+    N_train = 131885 # keep this in range [1, 131885]
 
     ###########################################################################
 
@@ -84,7 +84,6 @@ if __name__ == "__main__":
     scale = dataset.scale
 
     # length of the molecular feature vector
-    #N_features = dataset.X.shape[1]
     num_feat = dataset.num_features()
 
     dataset_train = Subset(dataset, np.arange(0, N_train))
