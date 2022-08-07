@@ -1,12 +1,12 @@
 # Practical Introduction to Neural Network Potentials
 ## Week 3 : Behler-Parrinello Neural Networks
 
-This repository contains X files:
+This repository contains 4 files:
 
 * `QM9.npz` : The same [QM9](https://figshare.com/collections/Quantum_chemistry_structures_and_properties_of_134_kilo_molecules/978904) dataset from the first meeting. Unlike the first meeting, atomic coordinates are also included.
 * `qm9_dataset.py` Contains the `QM9Dataset` class for easily loading and managing the geometries and energies in `QM9.npz`.
 This file is also where you finish implementing radial symmetry functions (i.e. a constant length vector to describe the local environment of a single atom in a molecule).
-* `behler_parrinello_neural_network.py` Contains the `BehlerParrinelloNeuralNetwork` class, which is a neural network object for modeling transferable potential energy surfaces of various molecules. This file is where you implement a neural network architecture (i.e. choose a sequence of various size layers and activation functions).
+* `behler_parrinello_neural_network.py` Contains the `BehlerParrinelloNeuralNetwork` class, which is a neural network object for modeling transferable potential energy surfaces of various molecules. This class consists of five independent feed-forward networks, one for predicting atomic energies of H, C, N, O, and F. This file is where you implement a neural network architecture (i.e. choose a sequence of various size layers and activation functions).
 * `train_qm9_neural_network.py` The main driver class that trains a `BehlerParrinelloNeuralNetwork` object using the `QM9Dataset` data. You'll edit the hyperparameters such as learning rate, batch size, number of training epochs, and amount of training data.
 
 ### First Exercise: Implement radial symmetry functions efficiently
