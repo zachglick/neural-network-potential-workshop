@@ -71,8 +71,8 @@ if __name__ == "__main__":
     # training hyperparameters: edit these!
     learning_rate = 5e-4
     batch_size = 100
-    epochs = 100
-    N_train = 131885 # keep this in range [1, 131885]
+    epochs = 300
+    N_train = 1000 # keep this in range [1, 131885]
 
     ###########################################################################
 
