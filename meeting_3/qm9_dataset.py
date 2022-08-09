@@ -12,7 +12,7 @@ class QM9Dataset(torch.utils.data.Dataset):
                  npz_file: str,
                  size: int=133885,
                  elems: [int]=[1, 6, 7, 8, 9],
-                 shifts: [float]=np.linspace(1.0, 4.0, 33),
+                 shifts: [float]=np.linspace(1.0, 5.0, 65),
                  width: float=1.0,
                  do_normalize_features: bool=True):
         """
@@ -143,16 +143,31 @@ class QM9Dataset(torch.utils.data.Dataset):
                     
         """
 
+        # the number of atoms in this molecule
         natom = Z.shape[0]
-        Z_onehot = np.zeros((natom, len(elems)), np.int64)
-        for zi, elem in enumerate(Z):
-            Z_onehot[zi, elems.index(elem)] = 1
 
-        D = scipy.spatial.distance_matrix(R, R)
-        X = D.reshape(natom, natom, 1) - shifts.reshape(1, 1, -1)
-        X = np.exp(-width * np.square(X))
-        X = np.einsum("ijr,jz->izr", X, Z_onehot)
-        X = X.reshape(natom, -1)
+        # X: the radial atom-centered symmetry functions for this molecule
+        X = np.zeros((natom, len(elems), len(shifts)))
+
+        # populate X
+        for atom_ind_i in range(natom):
+
+            r_i = R[atom_ind_i]
+
+            for atom_ind_j in range(natom):
+
+                r_j = R[atom_ind_j]
+                r_ij = np.linalg.norm(r_i - r_j)
+
+                elem_j = Z[atom_ind_j]
+                elem_ind_j = elems.index(elem_j)
+
+                for shift_ind, shift in enumerate(shifts):
+
+                    shift_r_ij_sq = (r_ij - shift) ** 2
+
+                    # edit this line!
+                    X[atom_ind_i, elem_ind_j, shift_ind] += np.exp(-width * shift_r_ij_sq)
 
         return X
 
