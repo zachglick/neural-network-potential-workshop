@@ -27,15 +27,14 @@ This is printed out when running `qm9_dataset.py`
 Next, replace the entire contents of `make_symmetry_functions` with the following code:
 ```
         natom = Z.shape[0]
-        Z_onehot = np.zeros((natom, len(ELEMS)), np.int64)
+        Z_onehot = np.zeros((natom, len(elems)), np.int64)
         for zi, elem in enumerate(Z):
-            Z_onehot[zi, ELEMS.index(elem)] = 1
+            Z_onehot[zi, elems.index(elem)] = 1
 
         D = scipy.spatial.distance_matrix(R, R)
-        X = D.reshape(natom, natom, 1) - SHIFTS.reshape(1, 1, -1)
-        X = np.exp(-WIDTH* np.square(X))
+        X = D.reshape(natom, natom, 1) - shifts.reshape(1, 1, -1)
+        X = np.exp(-width * np.square(X))
         X = np.einsum("ijr,jz->izr", X, Z_onehot)
-        X = X.reshape(natom, -1)
 
         return X
 ```

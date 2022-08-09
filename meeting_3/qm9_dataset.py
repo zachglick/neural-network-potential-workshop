@@ -167,7 +167,9 @@ class QM9Dataset(torch.utils.data.Dataset):
                     shift_r_ij_sq = (r_ij - shift) ** 2
 
                     # edit this line!
-                    X[atom_ind_i, elem_ind_j, shift_ind] += np.exp(-width * shift_r_ij_sq)
+                    X[atom_ind_i, elem_ind_j, shift_ind] += 0.0
+
+        X = X.reshape(natom, -1)
 
         return X
 
