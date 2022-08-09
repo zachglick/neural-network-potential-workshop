@@ -5,10 +5,6 @@ import torch
 
 from sklearn.linear_model import LinearRegression
 
-SHIFTS = np.linspace(1.0, 5.0, 65)
-ELEMS = [1, 6, 7, 8, 9]
-WIDTH = 1.0
-
 class QM9Dataset(torch.utils.data.Dataset):
     """pytorch Dataset class for handling QM9"""
 
@@ -17,12 +13,34 @@ class QM9Dataset(torch.utils.data.Dataset):
                  size: int=133885,
                  elems: [int]=[1, 6, 7, 8, 9],
                  shifts: [float]=np.linspace(1.0, 4.0, 33),
-                 width: float=1.0):
+                 width: float=1.0,
+                 do_normalize_features: bool=True):
         """
         Args:
             npz_file (string): Path to the npz_file.
-            size (int): Number of molecules to load (up to 133,885)
+            size (int): Number of molecules to load
+                For QM9, this can be up to 133,885
+            elems ([int]): list of elements present in the dataset
+                Elements are represented by their nuclear charge
+            shifts ([float]): list of distances for constructing radial symmetry functions
+                Distances are in angstrom
+            width (float): gaussian width for constructing radial symmetry functions
+                Width is in angstrom ** -2
+            do_normalize_features: normalize symmetry functions on a per atom basis
+                normalization is to mean=0 and std=1
         """
+
+        # list of elements present in the dataset
+        self.elems = elems
+
+        # set of gaussian shifts for constructing symmetry functions
+        self.shifts = np.array(shifts)
+
+        # gaussian width for constructing symmetry functions
+        self.width = width
+
+        # length of symmetry function feature vector size
+        self.n_feat = len(self.shifts) * len(self.elems)
 
         # the size of the whole QM9 dataset
         MAX_SIZE = 133885
@@ -48,16 +66,15 @@ class QM9Dataset(torch.utils.data.Dataset):
         E = data['energies'][inds].reshape(-1,1)
         E = self.linear_regression(Z, E) * 627.509
 
-        self.n_feat = len(SHIFTS) * len(ELEMS)
-
         # pre-compute all features
         # this is potentially expensize
         t1 = time.time()
-        X = [QM9Dataset.make_symmetry_functions(z, r) for z, r in zip(Z, R)]
+        X = [QM9Dataset.make_symmetry_functions(z, r, self.elems, self.shifts, self.width) for z, r in zip(Z, R)]
         print(f"\nFeature generation complete: {time.time() - t1:.1f} seconds.")
 
         # normalize the features
-        X = QM9Dataset.normalize_features(X, Z)
+        if do_normalize_features:
+            X = self.normalize_features(X, Z)
 
         # normalize the labels
         # save the scale so we can convert predictions back to kcal / mol
@@ -84,10 +101,10 @@ class QM9Dataset(torch.utils.data.Dataset):
                     with atomic energies (fit by linear regression) subtracted out.
         """
 
-        Z_count = np.zeros((len(Z), len(ELEMS)), dtype=np.int64)
+        Z_count = np.zeros((len(Z), len(self.elems)), dtype=np.int64)
 
         for ind_mol, Z_mol in enumerate(Z):
-            for ind_elem, elem in enumerate(ELEMS):
+            for ind_elem, elem in enumerate(self.elems):
                 Z_count[ind_mol, ind_elem] = np.sum(Z_mol == elem)
 
         lr = LinearRegression(fit_intercept=False)
@@ -105,7 +122,7 @@ class QM9Dataset(torch.utils.data.Dataset):
 
         return E - E_lr
 
-    def make_symmetry_functions(Z, R):
+    def make_symmetry_functions(Z, R, elems, shifts, width):
         """ Radial atom-centered symmetry functions
 
             Args:
@@ -113,6 +130,12 @@ class QM9Dataset(torch.utils.data.Dataset):
                     Z has dimension [n_atom].
                 R (np.ndarray, float): the raw molecular coordinates of atoms in a single molecule.
                     R is in units of angstrom and has dimension [n_atom, 3].
+                elems (np.ndarray, int): list of elements present in this dataset
+                    elements are represented by their nuclear charge
+                shifts (np.ndarray, float): list of distances for constructing radial symmetry functions
+                    shifts is in units of angstrom
+                width (float): gaussian width for constructing radial symmetry functions
+                    width is in units of angstrom ** -2
 
             Returns:
                 X (np.ndarray, float): the radial symmetry functions of the molecule.
@@ -120,38 +143,20 @@ class QM9Dataset(torch.utils.data.Dataset):
                     
         """
 
-        # the number of atoms in this molecule
         natom = Z.shape[0]
+        Z_onehot = np.zeros((natom, len(elems)), np.int64)
+        for zi, elem in enumerate(Z):
+            Z_onehot[zi, elems.index(elem)] = 1
 
-        # X: the radial atom-centered symmetry functions for this molecule
-        X = np.zeros((natom, len(ELEMS), len(SHIFTS)))
-
-        # populate X
-        for atom_ind_i in range(natom):
-
-            r_i = R[atom_ind_i]
-
-            for atom_ind_j in range(natom):
-
-                r_j = R[atom_ind_j]
-                r_ij = np.linalg.norm(r_i - r_j)
-
-                elem_j = Z[atom_ind_j]
-                elem_ind_j = ELEMS.index(elem_j)
-
-                for shift_ind, shift in enumerate(SHIFTS):
-
-                    shift_r_ij_sq = (r_ij - shift) ** 2
-
-                    # edit this line!
-                    #X[atom_ind_i, elem_ind_j, shift_ind] += 0.0
-                    X[atom_ind_i, elem_ind_j, shift_ind] += np.exp(-WIDTH * shift_r_ij_sq)
-
+        D = scipy.spatial.distance_matrix(R, R)
+        X = D.reshape(natom, natom, 1) - shifts.reshape(1, 1, -1)
+        X = np.exp(-width * np.square(X))
+        X = np.einsum("ijr,jz->izr", X, Z_onehot)
         X = X.reshape(natom, -1)
 
         return X
 
-    def normalize_features(X, Z):
+    def normalize_features(self, X, Z):
         """
         normalize radial symmetry functions
         """
@@ -161,7 +166,7 @@ class QM9Dataset(torch.utils.data.Dataset):
 
         means, stds = [], []
 
-        for elem in ELEMS:
+        for elem in self.elems:
             X_elem = X_all[Z_all == elem]
             means.append(np.average(X_elem, axis=0))
             stds.append(np.std(X_elem, axis=0))
@@ -169,15 +174,15 @@ class QM9Dataset(torch.utils.data.Dataset):
         for x, z in zip(X, Z):
             for atom_ind, atom_elem in enumerate(z):
 
-                mean = means[ELEMS.index(atom_elem)]
-                std = stds[ELEMS.index(atom_elem)]
+                mean = means[self.elems.index(atom_elem)]
+                std = stds[self.elems.index(atom_elem)]
 
                 x[atom_ind] -= mean
                 x[atom_ind] /= (std + 1e-2)
 
         return X
 
-    def flatten_mols(batch):
+    def flatten_mols(self, batch):
         """ Utility function to prepare a batch of molecules for inference
 
             Args: batch (list of dataset items)
@@ -197,7 +202,7 @@ class QM9Dataset(torch.utils.data.Dataset):
         Xz = {}
         Iz = {}
     
-        for z in ELEMS:
+        for z in self.elems:
             mask = (Z_all == z)
             Xz[z] = torch.from_numpy(X_all[mask])
             Iz[z] = torch.from_numpy(I_all[mask])
@@ -217,7 +222,7 @@ class QM9Dataset(torch.utils.data.Dataset):
 if __name__ == "__main__":
 
     # load (and generate features for) 100 random QM9 molecules 
-    dataset = QM9Dataset("QM9.npz", 500)
+    dataset = QM9Dataset("QM9.npz", size=500)
 
     # get the per-atom feature vectors of the first molecule
     X_mol0 = dataset[0][0]

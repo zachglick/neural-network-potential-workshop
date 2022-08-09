@@ -73,14 +73,23 @@ if __name__ == "__main__":
     batch_size = 100
     epochs = 300
     N_train = 1000 # keep this in range [1, 131885]
+    symmetry_function_shifts = np.linspace(1.0, 4.0, 33)
+    symmetry_function_width = 1.0
+    do_normalize_features = True
 
     ###########################################################################
 
-    # we'll always validatie on the last 2000 aspirin molecules; don't change this
+    # we'll always validate on the last 2000 molecules; don't change this
     N_val = 2000
 
     # load the (molecule, energy) data using a custom pytorch class
-    dataset = QM9Dataset("QM9.npz", N_train + N_val)
+    dataset = QM9Dataset("QM9.npz",
+                         size=(N_train + N_val),
+                         elems=[1, 6, 7, 8, 9],
+                         shifts=symmetry_function_shifts,
+                         width=symmetry_function_width,
+                         do_normalize_features=do_normalize_features,
+                         )
     scale = dataset.scale
 
     # length of the molecular feature vector
@@ -89,8 +98,8 @@ if __name__ == "__main__":
     dataset_train = Subset(dataset, np.arange(0, N_train))
     dataset_val = Subset(dataset, np.arange(N_train, N_train + N_val))
 
-    dataloader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True, collate_fn=QM9Dataset.flatten_mols)
-    dataloader_val = DataLoader(dataset_val, batch_size=batch_size, shuffle=True, collate_fn=QM9Dataset.flatten_mols)
+    dataloader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True, collate_fn=dataset.flatten_mols)
+    dataloader_val = DataLoader(dataset_val, batch_size=batch_size, shuffle=True, collate_fn=dataset.flatten_mols)
 
     # initialize a neural network model object to predict energies from molecular features
     model = BehlerParrinelloNeuralNetwork(num_feat, [1, 6, 7, 8, 9])
@@ -98,7 +107,7 @@ if __name__ == "__main__":
     # initialize an optimizer to adjust model weights (minimizing loss) via backpropagation
     loss_fn = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50], gamma=0.2)
+    #scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50], gamma=0.2)
 
     # compute the RMSE on the train and val subsets
     #model.eval()
