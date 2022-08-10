@@ -66,10 +66,15 @@ class QM9Dataset(torch.utils.data.Dataset):
         E = data['energies'][inds].reshape(-1,1)
         E = self.linear_regression(Z, E) * 627.509
 
+        t1 = time.time()
+
         # pre-compute all features
         # this is potentially expensize
-        t1 = time.time()
         X = [QM9Dataset.make_symmetry_functions(z, r, self.elems, self.shifts, self.width) for z, r in zip(Z, R)]
+
+        # flatten: (natom, shifts, elements) -> (natom, shifts * elements == features)
+        X = [x.reshape(-1, self.n_feat) for x in X]
+
         print(f"\nFeature generation complete: {time.time() - t1:.1f} seconds.")
 
         # normalize the features
@@ -167,9 +172,7 @@ class QM9Dataset(torch.utils.data.Dataset):
                     shift_r_ij_sq = (r_ij - shift) ** 2
 
                     # edit this line!
-                    X[atom_ind_i, elem_ind_j, shift_ind] += 0.0
-
-        X = X.reshape(natom, -1)
+                    X[atom_ind_i, elem_ind_j, shift_ind] += np.exp(-width * shift_r_ij_sq)
 
         return X
 
