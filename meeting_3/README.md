@@ -18,15 +18,16 @@ When this file is executed, the QM9 dataset is loaded, features are computed for
 The symmetry functions have not been fully implemented.
 Verify that the output indicates that the symmetry functions are not (yet) correct.
 
-Next, open `qm9_dataset.py` and go to the function `make_symmetry_functions.py`.
+Next, open `qm9_dataset.py` and go to the function `make_symmetry_functions`.
 To finish implementing this function, you have to edit a single line.
-This line in indicated by a comment.
+This line is indicated by a comment.
+
+
 Re-run `qm9_dataset.py` to determine if your changes are correct.
-
 Once you've correctly implemented the symmetry functions, make note of the amount of time required to compute the symmetry functions.
-This is printed out when running `qm9_dataset.py`
+This is printed out when running `qm9_dataset.py`, and is the walltime required to compute symmetry functions for 500 QM9 molecules.
 
-Next, replace the entire contents of `make_symmetry_functions` with the following code:
+Next, replace the entire contents of the `make_symmetry_functions` function with the following code:
 ```
         natom = Z.shape[0]
         Z_onehot = np.zeros((natom, len(elems)), np.int64)
@@ -44,16 +45,24 @@ Next, replace the entire contents of `make_symmetry_functions` with the followin
 Verify that this different implementation is also correct by re-running `qm9_dataset.py` from the command line.
 Note how the time required to compute the symmetry functions is reduced.
 
+Although the first implementation might be more natural to code and read, the second implementation uses optimized, vectorized matrix algebra operations.
+You should use pre-existing matrix algebra operations wherever possible in your code (machine learning or otherwise)!
+
 ### Second Exercise: Visualize symmetry functions of a single molecule.
 
 Run the file `visualize_symmetry_functions.py` from the command line.
 When this file is executed, the symmetry functions for all ten atoms in `QM9_200.xyz` are computed and plotted.
 Can you match the ten plots to atoms in the molecule?
 
+<img width="864" alt="Screen Shot 2022-08-10 at 12 57 39 PM" src="https://user-images.githubusercontent.com/16376046/183974232-55fe953b-5e85-4e43-a66f-4d830d6b4362.png">
+
+
 On the left of the plot, you can adjust the slider to change the symmetry function width.
 What happens when the width parameter is made very small?
 What about when the width parameter is made very large?
-What appears to be a reasonable width parameter (or range of possible parameter values)?
+Do some width parameters appear more "reasonable" than others to you? Why?
+
+If you were to add more symmetry functions within the same distance range, does the range of "reasonable" width parameters change? How so?
 
 ### Third Exercise: Train a BPNN model on QM9
 
