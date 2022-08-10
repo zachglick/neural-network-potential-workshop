@@ -61,6 +61,7 @@ if __name__ == "__main__":
             plotC = axs[i].plot(SHIFTS, X[i,1,:], label="C", marker=".", lw=1.0, ms=2.0, color="grey")
             plotN = axs[i].plot(SHIFTS, X[i,2,:], label="N", marker=".", lw=1.0, ms=2.0, color="blue")
             plotO = axs[i].plot(SHIFTS, X[i,3,:], label="O", marker=".", lw=1.0, ms=2.0, color="red")
+            axs[i].set_ylim(top=4.0)
 
         return [plotH[0], plotC[0], plotN[0], plotO[0]]
 
@@ -73,7 +74,7 @@ if __name__ == "__main__":
 
     # recompute symmetry functions and update the plot when the slider is changed
 
-    ax_slider = plt.axes([0.05, 0.50, 0.02, 0.20], facecolor='lightgoldenrodyellow')
+    ax_slider = plt.axes([0.03, 0.40, 0.02, 0.20], facecolor='lightgoldenrodyellow')
     slider_width = Slider(ax_slider,
                           label="WIDTH",
                           valmin=-4,
