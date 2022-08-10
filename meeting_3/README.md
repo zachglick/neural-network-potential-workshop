@@ -1,11 +1,13 @@
 # Practical Introduction to Neural Network Potentials
 ## Week 3 : Behler-Parrinello Neural Networks
 
-This repository contains 4 files:
+This repository contains 6 files:
 
 * `QM9.npz` : The same [QM9](https://figshare.com/collections/Quantum_chemistry_structures_and_properties_of_134_kilo_molecules/978904) dataset from the first meeting. Unlike the first meeting, atomic coordinates are also included.
+* `QM9_200.xyz` : A single molecule from QM9. You'll visualize the symmetry functions of this molecule to better understand atomic feature vectors.
 * `qm9_dataset.py` Contains the `QM9Dataset` class for easily loading and managing the geometries and energies in `QM9.npz`.
 This file is also where you finish implementing radial symmetry functions (i.e. a constant length vector to describe the local environment of a single atom in a molecule).
+* `visualize_symmetry_functions` : A script that plots the atomic features vectors of `QM9_200.xyz`.
 * `behler_parrinello_neural_network.py` Contains the `BehlerParrinelloNeuralNetwork` class, which is a neural network object for modeling transferable potential energy surfaces of various molecules. This class consists of five independent feed-forward networks, one for predicting atomic energies of H, C, N, O, and F. This file is where you implement a neural network architecture (i.e. choose a sequence of various size layers and activation functions).
 * `train_qm9_neural_network.py` The main driver class that trains a `BehlerParrinelloNeuralNetwork` object using the `QM9Dataset` data. You'll edit the hyperparameters such as learning rate, batch size, number of training epochs, and amount of training data.
 
@@ -42,7 +44,18 @@ Next, replace the entire contents of `make_symmetry_functions` with the followin
 Verify that this different implementation is also correct by re-running `qm9_dataset.py` from the command line.
 Note how the time required to compute the symmetry functions is reduced.
 
-### Second Exercise: Train a BPNN model on QM9
+### Second Exercise: Visualize symmetry functions of a single molecule.
+
+Run the file `visualize_symmetry_functions.py` from the command line.
+When this file is executed, the symmetry functions for all ten atoms in `QM9_200.xyz` are computed and plotted.
+Can you match the ten plots to atoms in the molecule?
+
+On the left of the plot, you can adjust the slider to change the symmetry function width.
+What happens when the width parameter is made very small?
+What about when the width parameter is made very large?
+What appears to be a reasonable width parameter (or range of possible parameter values)?
+
+### Third Exercise: Train a BPNN model on QM9
 
 Run `train_qm9_neural_network.py` to train a BPNN on QM9.
 How low of a RMSE do you get using 1,000 training molecules for 300 epochs?
