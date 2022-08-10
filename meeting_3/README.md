@@ -50,6 +50,9 @@ Run the file `visualize_symmetry_functions.py` from the command line.
 When this file is executed, the symmetry functions for all ten atoms in `QM9_200.xyz` are computed and plotted.
 Can you match the ten plots to atoms in the molecule?
 
+<img width="864" alt="Screen Shot 2022-08-10 at 12 57 39 PM" src="https://user-images.githubusercontent.com/16376046/183974232-55fe953b-5e85-4e43-a66f-4d830d6b4362.png">
+
+
 On the left of the plot, you can adjust the slider to change the symmetry function width.
 What happens when the width parameter is made very small?
 What about when the width parameter is made very large?
