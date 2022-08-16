@@ -23,7 +23,15 @@ This workshop is a 5-week crash course on machine learning methods for modeling 
 Each directory contains a separate presentation and related Python exercise. To participate in the exercises, we recommend working in a conda environment on a personal computer. A non-exhaustive list of Python packages needed for the exercises:
 
 - numpy
+- scipy
 - pandas
+- matplotlib
 - scikit-learn
 - pytorch
+- pytorch_geometric
 
+The following command creates a new conda environment with all necessary libraries:
+
+```
+conda create -n NNPw python=3.9 matplotlib scipy numpy pytorch=1.11.* pyg -c pytorch -c pyg
+```
