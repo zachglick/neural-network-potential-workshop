@@ -1,6 +1,16 @@
 # Practical Introduction to Neural Network Potentials
 ## Week 3 : Behler-Parrinello Neural Networks
+### Reading homework before Week 4:
 
+https://aip.scitation.org/doi/10.1063/1.3553717
+
+Symmetry functions as described by Behler. Pay special attention to the angular functions, which give AEVs angular resolution. You can implement these into the existing code to see how they improve the model.
+
+https://arxiv.org/pdf/1704.01212.pdf
+
+Classic message-passing neural network paper. Read this as an introductory text to message-passing and graph neural networks. We will expand on this topic in the following weeks to approach the current state-of-the-art models.
+
+### Repo contents
 This repository contains 6 files:
 
 * `QM9.npz` : The same [QM9](https://figshare.com/collections/Quantum_chemistry_structures_and_properties_of_134_kilo_molecules/978904) dataset from the first meeting. Unlike the first meeting, atomic coordinates are also included.
