@@ -27,7 +27,7 @@ Within this function, find where the messages are defined
 
 The current message function (using the notation from the slides) is defined as:
 
-$M_{i}^{t} = \sum_{j} m_{ji}^{t} = \sum_{j} (x_{j}^{t}, e_{ij})$
+$M_{i}^{t} = \sum_{j} m_{ji}^{t} = \sum_{j} (x_{j}^{t-1}, e_{ij})$
 
 where $x_{i}^{t}$ is the hidden state vector of atom $i$ at iteration $t$, $e_{ij}$ is an encoding of the scalar distance between atoms $i$ and $j$, and $(... , ...)$ is vector concatenation.
 
