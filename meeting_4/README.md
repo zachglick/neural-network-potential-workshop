@@ -1,7 +1,7 @@
 # Practical Introduction to Neural Network Potentials
 ## Week 4 : Message-Passing Neural Networks (MPNNs)
 
-This repository contains 4 files:
+This repository contains 3 files:
 
 * `qm9_dataset.py` Contains the `QM9Dataset` class for easily loading and managing the geometries and energies in `QM9.npz`.
 * `behler_parrinello_neural_network.py` Contains the `MessagePassingNeuralNetwork` class, which is a neural network object for modeling transferable potential energy surfaces of various molecules. This class defines message, update, and readout functions that operate on molecular graphs for predicting atomic energies. You will experiment with different message, update, and readout functions.
@@ -26,9 +26,9 @@ forward pass of a batch of molecules through the network.
 Within this function, find where the messages are defined
 
 The current message function (using the notation from the MPNN paper) is defined as:
-```
+
 $m_{i}^{t} = \sum_{j} (h_{j}^{t}, e_{ij})$
-```
+
 where $(... , ...)$ is vector concatenation and $e_{ij}$ is an encoding of the scalar distance between atoms $i$ and $j$.
 
 Your task is to come up with a better message function.
