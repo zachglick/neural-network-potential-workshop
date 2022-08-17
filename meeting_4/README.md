@@ -4,7 +4,7 @@
 This repository contains 3 files:
 
 * `qm9_dataset.py` Contains the `QM9Dataset` class for easily loading and managing the geometries and energies in `QM9.npz`.
-* `behler_parrinello_neural_network.py` Contains the `MessagePassingNeuralNetwork` class, which is a neural network object for modeling transferable potential energy surfaces of various molecules. This class defines message, update, and readout functions that operate on molecular graphs for predicting atomic energies. You will experiment with different message, update, and readout functions.
+* `message_passing_neural_network.py` Contains the `MessagePassingNeuralNetwork` class, which is a neural network object for modeling transferable potential energy surfaces of various molecules. This class defines message, update, and readout functions that operate on molecular graphs for predicting atomic energies. You will experiment with different message, update, and readout functions.
 * `train_qm9_neural_network.py` The main driver class that trains a `MessagePassingNeuralNetwork` object using the `QM9Dataset` data. You'll edit the parameters and hyperparameters such as learning rate, batch size, number of training epochs, embedding dimension, and number of message passes.
 
 ### First Exercise: Experiment with the number of message passes
