@@ -27,9 +27,9 @@ Within this function, find where the messages are defined
 
 The current message function (using the notation from the slides) is defined as:
 
-$M_{i}^{t} = \sum_{j} m_{ji}^{t} = \sum_{j} (h_{j}^{t}, e_{ij})$
+$M_{i}^{t} = \sum_{j} m_{ji}^{t} = \sum_{j} (x_{j}^{t}, e_{ij})$
 
-where $(... , ...)$ is vector concatenation and $e_{ij}$ is an encoding of the scalar distance between atoms $i$ and $j$.
+where $x_{i}^{t}$ is the hidden state vector of atom $i$ at iteration $t$, $e_{ij}$ is an encoding of the scalar distance between atoms $i$ and $j$, and $(... , ...)$ is vector concatenation.
 
 Your task is to come up with a better message function.
 One possible improvement is to replace the concatenation operation with an outer product between vectors. (Hint: you'll use the `torch.einsum` function).
