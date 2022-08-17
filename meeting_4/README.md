@@ -25,15 +25,15 @@ Open the file `message_passing_neural_network.py` and find the `forward` functio
 forward pass of a batch of molecules through the network.
 Within this function, find where the messages are defined
 
-The current message function (using the notation from the MPNN paper) is defined as:
+The current message function (using the notation from the slides) is defined as:
 
-$m_{i}^{t} = \sum_{j} (h_{j}^{t}, e_{ij})$
+$M_{i}^{t} = \sum_{j} m_{ji}^{t} = \sum_{j} (h_{j}^{t}, e_{ij})$
 
 where $(... , ...)$ is vector concatenation and $e_{ij}$ is an encoding of the scalar distance between atoms $i$ and $j$.
 
 Your task is to come up with a better message function.
 One possible improvement is to replace the concatenation operation with an outer product between vectors. (Hint: you'll use the `torch.einsum` function).
-There are many good alternatives.
+You could also introduce an additional feed-forward neural network (the update and readout functions already use neural networks). There are many good alternatives.
 
 Note: the dimensionality of the message vector has to be defined in the __init__ function.
 For the current message function, the vector length is the sum of the hidden state vector length and the edge vector length:
@@ -56,8 +56,8 @@ Did your conclusions about the number of message passes change?
 
 ### Fourth Exercise: Compare your MPNN to last week's BPNN
 
-Recreate the learning curve from last week with the MPNN
-Train the MPNN with the number of message passes, the message passing function, the distance cutoff, and the embedding dimension informed by the results of the previous exercise.
+Recreate the learning curve from last week with an MPNN.
+Train this MPNN with the number of message passes, the message passing function, the distance cutoff, and the embedding dimension informed by the results of the previous exercises.
 
 Which model performs better?
 Note that model performance is heavily dependent on your chosen hyperparameters and also achieving convergence (not terminating the training too early).
