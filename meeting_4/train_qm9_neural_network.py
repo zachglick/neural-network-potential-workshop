@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     distance_cutoff = 3.0
     embedding_dim = 8
-    message_passes = 4
+    message_passes = 0
 
     ###########################################################################
 

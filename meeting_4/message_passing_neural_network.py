@@ -94,10 +94,10 @@ class MessagePassingNeuralNetwork(torch.nn.Module):
         # z_i : [natom, 1]
         z_i = batch.x
 
-        # e_ij : [2, nedge]
-        e_ij = batch.edge_index
-        e_source = e_ij[0]
-        e_sink = e_ij[1]
+        # edge_index : [2, nedge]
+        edge_index = batch.edge_index
+        e_source = edge_index[0]
+        e_sink = edge_index[1]
 
         # dist_ij : [nedge, 1]
         dist_ij = batch.edge_attr
@@ -106,7 +106,7 @@ class MessagePassingNeuralNetwork(torch.nn.Module):
         mol_ind = batch.batch
 
         natom = z_i.shape[0]
-        nedge = e_ij.shape[1]
+        nedge = edge_index.shape[1]
 
         ###############################
         # form radial basis functions #
@@ -124,45 +124,45 @@ class MessagePassingNeuralNetwork(torch.nn.Module):
 
         # embed the nuclear charge (Z) in a vector
 
-        # h_i_0 : [natom, nembed]
-        h_i_0 = self.embedding(z_i)
-        h_i_0 = h_i_0.reshape((-1, self.embedding_dim))
+        # x_i_0 : [natom, nembed]
+        x_i_0 = self.embedding(z_i)
+        x_i_0 = x_i_0.reshape((-1, self.embedding_dim))
 
         ################
         # message pass #
         ################
 
         # save the hidden state vectors of each message passing iteration
-        h_i_list = [h_i_0]
+        x_i_list = [x_i_0]
 
         for t in range(self.npass):
 
             # the last iteration's hidden state vector
-            h_i_prev = h_i_list[-1]
+            x_i_prev = x_i_list[-1]
 
             #~~ change this message function! ~~#
-            # message from j -> i is a concatenation of h_j and dist(i, j)
-            m_ij = torch.cat([rbf_ij, h_i_prev[e_sink]], dim=1)
+            # message from j -> i is a concatenation of x_j and dist(i, j)
+            m_ij = torch.cat([rbf_ij, x_i_prev[e_sink]], dim=1)
 
             # sum over j to get aggregated messages for each i
             m_i = scatter(m_ij, e_source.reshape((-1,1)), dim=0)
 
             # update the hidden state
             # lots of options here too
-            h_i_next = h_i_prev + 0.1 * self.update_layers[t](m_i)
+            x_i_next = x_i_prev + 0.1 * self.update_layers[t](m_i)
 
             # keep track of the hidden states
-            h_i_list.append(h_i_next)
+            x_i_list.append(x_i_next)
 
         ###########
         # readout #
         ###########
 
         # concatenate the hidden states over all of the iterations
-        h_i_all = torch.cat(h_i_list, dim=1)
+        x_i_all = torch.cat(x_i_list, dim=1)
 
         # readout atomic energies via a dense feed-forward NN
-        y_i = self.readout_layer(h_i_all)
+        y_i = self.readout_layer(x_i_all)
 
         # sum atom energies into molecule energies
         y = scatter(y_i, mol_ind.reshape(-1,1), dim=0)
