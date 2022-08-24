@@ -15,6 +15,8 @@ This workshop is a 5-week crash course on machine learning methods for modeling 
 [Meeting 1 Slides](https://docs.google.com/presentation/d/1gIefW0h07NFAQIoZ40YRfCEcNRzDHdWUTBWtLZ969ZY)  
 [Meeting 2 Slides](https://github.com/zachglick/neural-network-potential-workshop/blob/main/meeting_2/slides.pdf)  
 [Meeting 3 Slides](https://github.com/zachglick/neural-network-potential-workshop/blob/main/meeting_3/slides.pdf)  
+[Meeting 4 Slides](https://github.com/zachglick/neural-network-potential-workshop/blob/main/meeting_4/slides.pdf)  
+[Meeting 5 Slides](https://github.com/zachglick/neural-network-potential-workshop/blob/main/meeting_5/slides.pdf)  
 
 ---
 
